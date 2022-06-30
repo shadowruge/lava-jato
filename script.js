@@ -3,7 +3,7 @@ function salvar() {
     document.getElementById("modelo").value
     document.getElementById("placa").value
     document.getElementById("valor").value
-  
+
     dayName = new Array("domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado")
     monName = new Array("Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
     now = new Date
