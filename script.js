@@ -1,80 +1,101 @@
-const service = document.getElementById('service')
-const model = document.getElementById('model')
-const license_plate = document.getElementById('license_plate')
-const price = document.getElementById('price')
-const total = parseInt(document.getElementById('total').value)
+const transactionsUl = document.querySelector("#transactions");
+const incomeDisplay = document.querySelector("#money-plus");
+const expenseDisplay = document.querySelector("#money-minus");
+const balanceDisplay = document.querySelector("#balance");
+const form = document.querySelector("#form");
+const inputTransactionName = document.querySelector("#text");
+const inputTransactionAmount = document.querySelector("#amount");
 
-const fullDate = () => {
-  
-//Days of the week 
-  dayName = new Array(
-    "domingo",
-    "segunda",
-    "terça",
-    "quarta",
-    "quinta",
-    "sexta",
-    "sábado")
+const localStorageTransactions = JSON.parse(
+  localStorage.getItem("transactions")
+);
+let transactions =
+  localStorage.getItem("transactions") !== null ? localStorageTransactions : [];
 
-//Months of the year
-  monName = new Array(
-    "Janeiro",
-    "Fevereiro",
-    "Marco",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro")
+const removeTransaction = (ID) => {
+  transactions = transactions.filter((transaction) => transaction.id !== ID);
 
-//Corrent date
-  now = new Date
-  fulldate = {
-    hora: now.getHours(),
-    minutos: now.getMinutes(),
-    dia: dayName[now.getDay()],
-    data: now.getDate(),
-    mes: now.getMonth() + 1,
-    ano: now.getFullYear()
+  updateLocalStorage();
+
+  init();
+};
+
+const addTransactionIntoDOM = (transaction) => {
+  const operator = transaction.amount < 0 ? "-" : "+";
+  const CSSClass = transaction.amount < 0 ? "minus" : "plus";
+  const amountWithoutOperator = Math.abs(transaction.amount);
+  const li = document.createElement("li");
+
+  li.classList.add(CSSClass);
+
+  li.innerHTML = `
+    ${transaction.name}
+    <span>${operator}R$ ${amountWithoutOperator}</span>
+    <button class="delete-btn" onClick="removeTransaction(${transaction.id})">
+    x
+    </button>
+    `;
+  transactionsUl.append(li);
+};
+
+const updateBalanceValues = () => {
+  const transactionsAmounts = transactions.map(
+    (transaction) => transaction.amount
+  );
+  const total = transactionsAmounts
+    .reduce((acumulator, transaction) => acumulator + transaction, 0)
+    .toFixed(2);
+  const income = transactionsAmounts
+    .filter((value) => value > 0)
+    .reduce((acumulator, value) => acumulator + value, 0)
+    .toFixed(2);
+  const expense = Math.abs(
+    transactionsAmounts
+      .filter((value) => value < 0)
+      .reduce((acumulator, value) => acumulator + value, 0)
+      .toFixed(2)
+  );
+
+  balanceDisplay.textContent = `R$ ${total}`;
+  incomeDisplay.textContent = `R$ ${income}`;
+  expenseDisplay.textContent = `R$ ${expense}`;
+};
+
+const init = () => {
+  transactionsUl.innerHTML = "";
+  transactions.forEach(addTransactionIntoDOM);
+  updateBalanceValues();
+};
+
+init();
+
+const updateLocalStorage = () => {
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+};
+
+const generateID = () => Math.round(Math.random() * 1000);
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const transactionName = inputTransactionName.value.trim();
+  const transactionAmount = inputTransactionAmount.value.trim();
+
+  if (transactionName === "" || transactionAmount === "") {
+    alert("Por favor, preencha os campos! ");
+    return;
   }
 
-}
+  const transaction = {
+    id: generateID(),
+    name: transactionName,
+    amount: Number(transactionAmount),
+  };
 
-//Cars in the yard
-const noPatio = () => {
-  patioIndom =
-    `<li>
-    Serviço: ${service.value} 
-    Modelo: ${model.value}
-    Placa: ${license_plate.value}
-    Valor: ${price.value}
-    Dia: ${dayName[now.getDay()]}
-    Data: ${now.getDate()}
-    Mês: ${monName[now.getMonth()]}
-    Ano: ${now.getFullYear()}
-    Hora: ${now.getHours()}
-    Minutos: ${now.getMinutes()}
-    <hr>
-  </li>`
+  transactions.push(transaction);
+  init();
+  updateLocalStorage();
 
-  //Elements displayed in the Dom 
-  document.getElementById("view").innerHTML += patioIndom;
-}
-
-const soma=()=>{
-const a = [parseInt(document.getElementById('price').value)];
-const total = a.reduce((acumulator, item)=>acumulator+=item);
-console.log(total);
-
-}
-
-const salvar=()=> {
-
-  fullDate()
-  noPatio()
-  soma()  
-}
+  inputTransactionName.value = "";
+  inputTransactionAmount.vaule = "";
+});

@@ -1,36 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lava-Jato</title>
-  <link rel="shortcut icon" href="#" type="image/x-icon">
-  
-  <link rel="stylesheet" href="style.css">
-  <title>Lava-Jato</title>
-</head>
-<body>
-        <nav>
-            <span>Lava-Jato do Galpão</span>
-        </nav>
-        <div><label>Total: </label>
-          <span id="total"></span></div>
-        <hr>
-  <div>
-    <label for="">Serviço: </label>
-    <input id="service" type="text"><br>
-    <label for="">Modelo: </label>
-    <input id="model" type="text"><br>
-    <label for="">Placa: </label>
-    <input id="license_plate" type="text"><br>
-    <label for="">Valor: </label>
-    <input id="price" type="text"><br><br>
-    <button onclick="salvar()">Cadastro</button>    
-  </div>
-  <script src="script.js"></script>
-<br><hr>
-<div id="view">
-  
-</div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="#" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Lava-Jato</title>
+  </head>
+  <body>
+    <nav>
+      <span>Lava-Jato</span>
+    </nav>
+
+    <div class="container">
+      <h4>Saldo atual</h4>
+
+      <h1 id="balance" class="balance">R$ 0.00</h1>
+
+      <div class="inc-exp-container">
+        <div>
+          <h4>Receitas</h4>
+          <p id="money-plus" class="money plus">+ R$0.00</p>
+        </div>
+
+        <div>
+          <h4>Despesas</h4>
+          <p id="money-minus" class="money minus">- R$0.00</p>
+        </div>
+      </div>
+
+      <h3>Adicionar Serviço</h3>
+
+      <form id="form">
+        <div class="form-control">
+          <label for="text">Serviço</label><br>
+          <input autofocus type="text" id="text"
+            placeholder="Nome de Serviço"
+          />
+        </div>
+
+        <div class="form-control">
+          <label for="amount">Valor</label><br>
+          <input type="number" id="amount" placeholder="Valor do Serviço"/><br>
+          <small>(Negativo (-) Despesas, Positivo (+) Receitas)</small>
+        </div>
+
+        <button class="btn">Adicionar</button>
+      </form>
+      <h3>Transações</h3>
+<hr>
+      <ul id="transactions" class="transactions"></ul>
+
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
